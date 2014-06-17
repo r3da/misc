@@ -1,22 +1,27 @@
-public class MyHashMap<K,V>{
+public class MyHashMap<K,V> {
+	
 	protected Entry table[];
 	private static final int DEFAULT_INIT_CAPACITY = 16;
 	private static final float LOAD_FACTOR = 0.75f;
 	public static int threshold;
 	public static int size;
-	public MyHashMap(){
+	
+	public MyHashMap() {
 		threshold = (int) (DEFAULT_INIT_CAPACITY * LOAD_FACTOR);
 		table = new Entry[DEFAULT_INIT_CAPACITY];
 		size = 0;
 	}
-	protected int size(){
+	
+	protected int size() {
 		return size;
 	}
-	protected int indexFor(int hashcode, int length){
+	
+	protected int indexFor(int hashcode, int length) {
 		int index = hashcode&(length-1);
 		return index;
 	}
-	protected Entry<K,V> getEntry(K key){
+	
+	protected Entry<K,V> getEntry(K key) {
 		int index = indexFor(key.hashCode(),table.length);
 		Entry<K,V> entry = table[index];
 		while(entry != null){
@@ -27,14 +32,16 @@ public class MyHashMap<K,V>{
 		}
 		return null;
 	}
-	public V get(K key){
+	
+	public V get(K key) {
 		Entry<K,V> entry = getEntry(key);
 		if(entry == null){
 			return null;
 		}
 		return entry.value;	
 	}
-	public void put(K key, V value){
+	
+	public void put(K key, V value) {
 		int index = indexFor(key.hashCode(),table.length);
 		Entry<K,V> entry = table[index];
 		if(containsKey(key)){
@@ -60,13 +67,13 @@ public class MyHashMap<K,V>{
 
 
 	}
-	protected void createEntry(K key, V value, int index){
+	protected void createEntry(K key, V value, int index) {
 			Entry<K,V> entry = table[index];
 			table[index] = new Entry<K,V>(key,value,entry);
 			//System.out.println("Create Entry> " + table[index] + " ---> ext --> "+ entry);
 			size++;
 	}
-	public boolean containsKey(K key){
+	public boolean containsKey(K key) {
 		int index = indexFor(key.hashCode(),table.length);
 		Entry<K,V> entry = table[index];
 		if(entry == null){
@@ -83,17 +90,17 @@ public class MyHashMap<K,V>{
 
 		return false;
 	}
-	private void resize(int newCapacity){
+	private void resize(int newCapacity) {
 		Entry newTable[] = new Entry[newCapacity];
 		transfer(newTable);
 		table = newTable;
 		threshold = (int)(newCapacity*LOAD_FACTOR);
 	} 
-	protected void transfer(Entry newTable[]){
-		for(int i = 0; i < table.length; i++){
-			if(table[i] != null){
+	protected void transfer(Entry newTable[]) {
+		for(int i = 0; i < table.length; i++) {
+			if(table[i] != null) {
 				Entry<K,V> current = table[i];
-				while(current != null){
+				while(current != null) {
 					Entry<K,V> entry = current;
 					current = current.next;
 
@@ -105,18 +112,18 @@ public class MyHashMap<K,V>{
 			}
 		}
 	}
-	public void removeKey(K key){
+	public void removeKey(K key) {
 
-		if(containsKey(key)){
+		if(containsKey(key)) {
 		        System.out.println("Remo??" + key);
 			int index = indexFor(key.hashCode(),table.length);
 			Entry<K,V> entry = table[index];
-			if(entry.key.equals(key)){
+			if(entry.key.equals(key)) {
 
 				table[index] = entry.next;
 				entry.removeme(this);
-			}else{
-				while(entry.next.key.equals(key) == false){
+			} else {
+				while(entry.next.key.equals(key) == false) {
 					entry = entry.next;
 				}
 				Entry<K,V> target = entry.next;
@@ -125,11 +132,11 @@ public class MyHashMap<K,V>{
 				target.removeme(this);
 			}
 			size--;
-		}else{
+		} else {
 			System.out.println("The following key what not found, so this could not be removed> " + key);
 		}
 	}
-	public void printTable(){
+	public void printTable() {
 	System.out.println("HashMap size = " + size);
 		for(int i = 0; i < table.length; i++){
 			Entry<K,V> entry = table[i];
@@ -144,7 +151,7 @@ public class MyHashMap<K,V>{
 		}
 	}
 
-	static class Entry<K,V>{
+	static class Entry<K,V> {
 		public K key;
 		public V value;
 		public Entry<K,V> next;
@@ -153,16 +160,19 @@ public class MyHashMap<K,V>{
 			value = v;
 			this.next = next;
 		}
-
-		protected void registerAccess(MyHashMap<K,V> hashmap){
+		// this 2 methods are use to regiter edit access for future uses, like implementing a linked hash map
+		protected void registerAccess(MyHashMap<K,V> hashmap) {
 		}
-		protected void removeme(MyHashMap<K,V> hashmap){
+		
+		protected void removeme(MyHashMap<K,V> hashmap) {
+		
 		}
-		public String toString(){
+		
+		public String toString() {
 			return "[key = "+key+", Value = "+value+", hashcode="+key.hashCode()+"]";
 		}
 	}
-	public static void main(String args[]){
+	public static void main(String args[]) {
 		MyHashMap<String,String> hashmap= new MyHashMap<String,String>();
 		hashmap.put("uno","one");
 		hashmap.put("dos","two");

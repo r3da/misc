@@ -1,3 +1,5 @@
+package org.problems;
+
 public class MyHashMap<K,V> {
 	
 	protected Entry table[];
